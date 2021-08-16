@@ -13,8 +13,8 @@ namespace BankAlex_CodeTest_FrontEnd.Controllers
     [ApiController]
     public class TransactionsController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<List<TransactionVM>> Get()
+        [HttpGet("{id:guid?}")]
+        public ActionResult Get(Guid id)
         {
             Transaction transaction1 = new Transaction()
             {
@@ -50,49 +50,74 @@ namespace BankAlex_CodeTest_FrontEnd.Controllers
             transactions.Add(transaction1);
             transactions.Add(transaction2);
 
-            List<TransactionVM> transactionVMs 
-                = transactions.Select(t => TransactionVM.GetVM(t)).ToList();
+         
 
-            return Ok(transactionVMs);
+            if (id == Guid.Empty)
+            {
+                List<TransactionVM> transactionVMs 
+                    = transactions.Select(s => TransactionVM.GetVM(s, false))
+                                    .ToList();
+                return Ok(transactionVMs);
+            }
+            else
+            {
+                var transaction
+                    = transactions.Where(t => t.Id == id)
+                                    .Select(s => TransactionVM.GetVM(s, true))
+                                    .FirstOrDefault();
+                return Ok(transaction);
+            }
         }
 
 
         [HttpPost]
-        public IActionResult Post(Transaction transaction)
+        public IActionResult Post(TransactionVM transaction)
         {
             try
             {
+                int seconds = DateTime.Now.Second;
+                if (seconds % 4 == 0)
+                    return StatusCode(500);
+
                 return Ok("transaction created");
             }
             catch
             {
-                return BadRequest("validation errors");
+                return StatusCode(500);
             }
         }
 
 
         [HttpPut("{id:guid}")]
-        public IActionResult Put(Guid id, Transaction transaction)
+        public IActionResult Put(Guid id, TransactionVM transaction)
         {
             try
             {
+                int seconds = DateTime.Now.Second;
+                if (seconds % 4 == 0)
+                    return StatusCode(500);
+
                 return Ok("transaction updated");
             }
             catch
             {
-                return BadRequest("validation errors");
+                return StatusCode(500);
             }
         }
         [HttpDelete("{id:guid}")]
-        public IActionResult Delete(Guid id, Transaction transaction)
+        public IActionResult Delete(Guid id)
         {
             try
             {
-                return Ok("transaction updated");
+                int seconds = DateTime.Now.Second;
+                if(seconds % 4 == 0)
+                    return StatusCode(500);
+
+                return Ok("transaction delete");
             }
             catch
             {
-                return BadRequest("validation errors");
+                return StatusCode(500);
             }
         }
     }

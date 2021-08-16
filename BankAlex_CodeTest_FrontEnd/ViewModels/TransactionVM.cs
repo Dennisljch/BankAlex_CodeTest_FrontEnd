@@ -12,11 +12,12 @@ namespace BankAlex_CodeTest_FrontEnd.ViewModels
         public string FromAccount { get; set; }
         public string ToAccount { get; set; }
         public string Description { get; set; }
-        public double Amount { get; set; }
+        public string Amount { get; set; }
         public string Date { get; set; }
+        public Guid OwnerId { get; set; }
         public string Owner { get; set; }
 
-        public static TransactionVM GetVM(Transaction transaction)
+        public static TransactionVM GetVM(Transaction transaction, bool standard)
         {
             return new TransactionVM()
             {
@@ -24,8 +25,9 @@ namespace BankAlex_CodeTest_FrontEnd.ViewModels
                 FromAccount = transaction.FromAccount,
                 ToAccount = transaction.ToAccount,
                 Description = transaction.Description,
-                Amount = transaction.Amount,
-                Date = transaction.Date.ToString(),
+                Amount = transaction.Amount.ToString(),
+                Date = standard ? transaction.Date.ToString("yyyy-MM-ddThh:mm") : transaction.Date.ToString(),
+                OwnerId = transaction.Owner.Id,
                 Owner = transaction.Owner.Name
             };
         }

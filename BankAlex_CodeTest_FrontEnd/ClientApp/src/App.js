@@ -22,7 +22,7 @@ const MainApp = props => {
                         <Switch>
                             <Route path='/' exact component={Transactions} />
                             <Route path="/AllTransactions"  exact component={Transactions} />
-                            <Route path="/AllTransactions/:id"  component={Transaction} />
+                            <Route path="/EditTransactions/:id"  component={Transaction} />
                         </Switch>
                     </div>
                 </div>
