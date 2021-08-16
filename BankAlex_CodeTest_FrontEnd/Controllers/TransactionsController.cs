@@ -1,4 +1,5 @@
 ﻿using BankAlex_CodeTest_FrontEnd.Models;
+using BankAlex_CodeTest_FrontEnd.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,7 +14,7 @@ namespace BankAlex_CodeTest_FrontEnd.Controllers
     public class TransactionsController : ControllerBase
     {
         [HttpGet]
-        public IActionResult Get()
+        public ActionResult<List<TransactionVM>> Get()
         {
             Transaction transaction1 = new Transaction()
             {
@@ -21,7 +22,7 @@ namespace BankAlex_CodeTest_FrontEnd.Controllers
                 FromAccount = "123-456",
                 ToAccount = "789-123",
                 Description = "Sample transaction description",
-                Amount = 123001.8,
+                Amount = 123.8,
                 Date = DateTime.Now,
                 Owner = new Customer()
                 {
@@ -49,7 +50,10 @@ namespace BankAlex_CodeTest_FrontEnd.Controllers
             transactions.Add(transaction1);
             transactions.Add(transaction2);
 
-            return Ok(transactions);
+            List<TransactionVM> transactionVMs 
+                = transactions.Select(t => TransactionVM.GetVM(t)).ToList();
+
+            return Ok(transactionVMs);
         }
 
 
